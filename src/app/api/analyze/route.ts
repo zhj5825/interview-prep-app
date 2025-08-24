@@ -11,10 +11,10 @@ interface AnalysisResponse {
 }
 
 async function analyzeWithClaude(question: string): Promise<AnalysisResponse> {
-  const apiKey = process.env.CLAUDE_API_KEY;
+  const apiKey = process.env.ANTHROPIC_API_KEY;
   
   if (!apiKey) {
-    console.warn('CLAUDE_API_KEY not set, using mock response');
+    console.warn('ANTHROPIC_API_KEY not set, using mock response');
     return getMockResponse(question);
   }
 
