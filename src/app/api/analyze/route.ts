@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { createErrorResponse, createSuccessResponse, validateRequestBody } from '@/lib/server/api-utils'
 import Anthropic from '@anthropic-ai/sdk';
 

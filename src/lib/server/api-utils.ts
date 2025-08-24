@@ -7,7 +7,7 @@ export function createErrorResponse(message: string, status: number = 500) {
   )
 }
 
-export function createSuccessResponse(data: any, status: number = 200) {
+export function createSuccessResponse<T>(data: T, status: number = 200) {
   return NextResponse.json(data, { status })
 }
 
