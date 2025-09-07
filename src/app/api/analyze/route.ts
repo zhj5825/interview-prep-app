@@ -22,7 +22,12 @@ async function analyzeWithClaude(question: string): Promise<AnalysisResponse> {
     apiKey: apiKey,
   });
   
-  const prompt = `Analyze this interview question and provide a detailed plan to approach the problem with pseudocode:
+  const prompt = `Analyze this interview question and provide a detailed plan to approach the problem:
+    
+    For system design questions, the detailed plan should include the back of the envelope calculations for the system, the high level architecture, 
+    and the detailed components of the system. Tradeoffs and assumptions should be considered. The data models and the APIs should be illustrated using pseudocode.
+
+    For coding and algorithmic questions, in addition to the detailed plan, the python code should be provided to solve the problem, and the time and space complexity should be analyzed.
 
     Question: ${question}
     `
