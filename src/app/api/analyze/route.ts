@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
 import { createErrorResponse, createSuccessResponse, validateRequestBody } from '@/lib/server/api-utils'
+import { db } from '@/lib/server/db'
 import Anthropic from '@anthropic-ai/sdk';
 
 interface AnalyzeRequest {
@@ -99,8 +100,10 @@ export async function POST(request: NextRequest) {
     }
 
     const analysis = await analyzeWithClaude(question.trim())
+    // Persist submission
+    const saved = await db.saveSubmission({ question: question.trim(), explanation: analysis.explanation })
     
-    return createSuccessResponse({ analysis })
+    return createSuccessResponse({ analysis, submissionId: saved.id })
   } catch (error) {
     console.error('Analysis error:', error)
     return createErrorResponse('Failed to analyze question. Please try again.', 500)
