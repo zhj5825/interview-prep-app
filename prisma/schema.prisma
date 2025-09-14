@@ -1,0 +1,20 @@
+// Prisma schema for local development (SQLite). You can switch to Postgres
+// by changing the provider and DATABASE_URL in your env.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Submission {
+  id          String   @id @default(cuid())
+  question    String
+  explanation String
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+}
