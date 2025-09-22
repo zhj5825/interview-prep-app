@@ -122,6 +122,7 @@ export default function HomePage() {
           const nextQ = cleaned ? (currentQ ? `${currentQ} ${cleaned}`.trim() : cleaned) : currentQ
           if (nextQ !== currentQ) {
             setQuestion(nextQ)
+            questionRef.current = nextQ
           }
           try {
             recognition.stop()
@@ -132,7 +133,7 @@ export default function HomePage() {
             showToast('Heard "let me think" — analyzing…', 'success')
             // Trigger analyze on the next tick to ensure state updates apply
             setTimeout(() => {
-              handleAnalyze()
+              handleAnalyze(nextQ)
             }, 0)
           }
           return
@@ -152,8 +153,9 @@ export default function HomePage() {
     }
   }, [])
 
-  const handleAnalyze = async () => {
-    if (!question.trim()) {
+  const handleAnalyze = async (overrideQuestion?: string) => {
+    const toAnalyze = (overrideQuestion ?? questionRef.current ?? question).trim()
+    if (!toAnalyze) {
       setError('Please enter a question to analyze')
       return
     }
@@ -167,7 +169,7 @@ export default function HomePage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ question: question.trim() }),
+        body: JSON.stringify({ question: toAnalyze }),
       })
 
       if (!response.ok) {
@@ -180,7 +182,7 @@ export default function HomePage() {
       if (data.submissionId) {
         const item: SubmissionItem = {
           id: data.submissionId,
-          question: question.trim(),
+          question: toAnalyze,
           explanation: data.analysis.explanation,
           createdAt: new Date().toISOString(),
         }
@@ -313,7 +315,7 @@ export default function HomePage() {
 
               <div className="flex flex-wrap gap-3">
                 <Button 
-                  onClick={handleAnalyze}
+                  onClick={() => handleAnalyze()}
                   disabled={isAnalyzing || !question.trim()}
                   className="flex items-center gap-2"
                 >
